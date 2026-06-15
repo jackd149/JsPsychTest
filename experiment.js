@@ -54,8 +54,8 @@ const glorp = {
     <h1>Glorp</h1>
     <p>There's a disease called <b>glorp</b>. Lots of things can get <b>glorp</b>.</p>
     <img src="img/Squirrel.png" alt="Squirrel" />
-    <p>Right now some squirrels have glorp.</p>
-    <p>Which other thing do you think might also have glorp?</p>
+    <p>Right now some squirrels have <b>glorp</b>.</p>
+    <p>Which other thing do you think might also have <b>glorp</b>?</p>
   `,
   choices: [oakTreeHtml, kangarooHtml],
   button_html: function(choice) {
@@ -107,7 +107,7 @@ const alotHtml = `
   <p style="margin:5px 0 0 0;">A lot</p>`;
 
 const questions = [
-  "Do trees have thoughts",
+  "Do trees have thoughts?",
   "Do trees have feelings?",
   "Can trees be grateful?",
   "Do trees listen?",
