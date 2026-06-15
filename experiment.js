@@ -3,104 +3,141 @@ const jsPsych = jsPsychOfflineStorage.initJsPsychOffline({
   display_element: 'jspsych-target'
 })
 
-// --- Helper: shape HTML generators ---
-const shapeSize = 80;
-const circleHtml = `<div style="width:${shapeSize}px;height:${shapeSize}px;border-radius:50%;background:#333;margin:0 auto;"></div>`;
-const squareHtml = `<div style="width:${shapeSize}px;height:${shapeSize}px;background:#333;margin:0 auto;"></div>`;
-const triangleHtml = `<div style="width:0;height:0;border-left:${shapeSize/2}px solid transparent;border-right:${shapeSize/2}px solid transparent;border-bottom:${shapeSize}px solid #333;margin:0 auto;"></div>`;
-const diamondHtml = `<div style="width:${shapeSize}px;height:${shapeSize}px;background:#333;transform:rotate(45deg);margin:0 auto;"></div>`;
+const beeHtml = `<img src="img/Bee.png" alt="Bee" style="width:120px; height:120px; object-fit:contain;">`;
+const grassHtml = `<img src="img/Grass.png" alt="Grass" style="width:120px; height:120px; object-fit:contain;">`;
+const oakTreeHtml = `<img src="img/OakTree.png" alt="Oak Tree" style="width:120px; height:120px; object-fit:contain;">`;
+const kangarooHtml = `<img src="img/Kangaroo.png" alt="Kangaroo" style="width:120px; height:120px; object-fit:contain;">`;
+const NatureFarHtml = `<img src="img/NatureFar.png" alt="Nature Far" style="width:200px; height:120px; object-fit:contain;">`;
+const NatureMiddleHtml = `<img src="img/NatureMiddle.png" alt="Nature Middle" style="width:200px; height:120px; object-fit:contain;">`;
+const NatureCloseHtml = `<img src="img/NatureClose.png" alt="Nature Close" style="width:200px; height:120px; object-fit:contain;">`;
 
-const shapesMaster = [
-  { id: 'circle', html: circleHtml },
-  { id: 'square', html: squareHtml },
-  { id: 'triangle', html: triangleHtml },
-  { id: 'diamond', html: diamondHtml },
-];
+var timeline = [];
 
-// Instructions (touch-friendly)
+const howOld = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <h1>How old are you?</h1>
+    <p>Please select your age from the options below:</p>
+  `,
+  choices: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+}
+timeline.push(howOld);
+
 const welcome = {
   type: jsPsychHtmlButtonResponse,
   stimulus: `
-    <h1>Find the circle</h1>
-    <p>On each trial you'll see four shapes. One of them is a circle.</p>
-    <p>Your task is to TAP the circle as quickly and accurately as possible.</p>
+    <h1>Let's Play a Guessing Game!</h1>
   `,
   choices: ['Start']
 };
+timeline.push(welcome);
 
-// Generate trials: shuffle positions each trial, keep exactly one circle
-const numTrials = 6;
-const trials = [];
-for (let i = 0; i < numTrials; i++) {
-  // create a shallow copy and shuffle
-  const shuffled = jsPsych.randomization.shuffle(shapesMaster.slice());
-  const choicesHtml = shuffled.map(s => s.html);
-  const correctIndex = shuffled.findIndex(s => s.id === 'circle');
 
-  const trial = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: '',
-    choices: choicesHtml,
-    button_layout: 'grid',
-    grid_rows: 2,
-    button_html: function(choice) {
-      return `<button class="jspsych-btn" style="width:140px;height:140px;border:none;background:transparent;padding:0">${choice}</button>`;
-    },
-    data: {
-      task: 'shape_choice',
-      correct_index: correctIndex,
-    },
-    trial_duration: 3000,
-    on_finish: (data) => {
-      data.correct = data.response !== null && data.response === data.correct_index;
-    }
-  };
-
-  trials.push(trial);
-
-  // brief feedback after each trial
-  trials.push({
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: function() {
-      const last = jsPsych.data.get().last(1).values()[0];
-      if (!last) return '';
-      if (last.response === -1) return '<div style="font-size:24px;">No response recorded</div>';
-      return last.correct ? '<div style="font-size:24px;color:green;">Correct</div>' : '<div style="font-size:24px;color:red;">Incorrect</div>';
-    },
-    choices: 'NO_KEYS',
-    trial_duration: 400,
-  });
-}
-
-// Debrief / summary
-const debrief = {
+const sarca = {
   type: jsPsychHtmlButtonResponse,
-  stimulus: () => {
-    const trialsData = jsPsych.data.get().filter({ task: 'shape_choice' });
-    const valid = trialsData.filter(trial => trial.response !== -1);
-    const correct = trialsData.filter({ correct: true });
-    const accuracy = trialsData.count() > 0 ? Math.round((correct.count() / trialsData.count()) * 100) : 0;
-    const meanRt = valid.count() > 0 ? Math.round(valid.select('rt').mean()) : 'N/A';
-
-    return `
-      <h2>Finished</h2>
-      <p>Accuracy: <strong>${accuracy}%</strong></p>
-      <p>Average RT (for responded trials): <strong>${meanRt} ms</strong></p>
-    `;
-  },
-  choices: ['End Experiment'],
-  on_finish: () => {
-    // Redirect back to index so the user can restart or manage data
-    try {
-      window.location.href = './';
-    } catch (e) {
-      // If running in a worker-less environment or unusual embed, ignore
-      console.warn('Redirect to index failed', e);
-    }
-  },
+  stimulus: `
+    <p>There's this Stuff called <b>sarca</b>, lots of things have <b>sarca</b> inside.</p>
+    <img src="img/Rose.png" alt="Rose" />
+    <p>Some roses have <b>sarca</b> inside.</p>
+    <p>Which other thing do you think also has <b>sarca</b> inside?</p>
+  `,
+  choices: [beeHtml, grassHtml],
+  button_html: function(choice) {
+    return `<button class="jspsych-btn" style="width:140px;height:140px;border:none;background:transparent;padding:0">${choice}</button>`;
+  }
 };
+timeline.push(sarca);
 
-// Assemble timeline and run
-const timeline = [welcome].concat(trials, [debrief]);
+const glorp = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <h1>Glorp</h1>
+    <p>There's a disease called <b>glorp</b>. Lots of things can get <b>glorp</b>.</p>
+    <img src="img/Squirrel.png" alt="Squirrel" />
+    <p>Right now some squirrels have glorp.</p>
+    <p>Which other thing do you think might also have glorp?</p>
+  `,
+  choices: [oakTreeHtml, kangarooHtml],
+  button_html: function(choice) {
+    return `<button class="jspsych-btn" style="width:140px;height:140px;border:none;background:transparent;padding:0">${choice}</button>`;
+  }
+};
+timeline.push(glorp);
+
+const feelAboutNature = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <p>Which Picture shows how you feel about nature?</p>
+  `,
+  choices: [NatureFarHtml, NatureMiddleHtml, NatureCloseHtml],
+  button_html: function(choice) {
+    return `<button class="jspsych-btn" style="width:220px;height:140px;border:none;background:transparent;padding:0">${choice}</button>`;
+  }
+};
+timeline.push(feelAboutNature);
+
+const treeQuestions = {
+  type: jsPsychHtmlButtonResponse,
+
+  stimulus: `
+    <h1>Tree Questions</h1>
+    <p>Answer the following questions about trees:</p>
+  `,
+  choices: ['Next']
+}
+timeline.push(treeQuestions);
+
+const neverHtml = `
+  <svg width="60" height="60" viewBox="0 0 60 60">
+    <circle cx="30" cy="30" r="25" fill="white" stroke="black" stroke-width="3"/>
+  </svg>
+  <p style="margin:5px 0 0 0;">Never</p>`;
+
+const sometimesHtml = `
+  <svg width="60" height="60" viewBox="0 0 60 60">
+    <circle cx="30" cy="30" r="25" fill="white" stroke="black" stroke-width="3"/>
+    <path d="M30,5 A25,25 0 0,0 30,55 Z" fill="black"/>
+  </svg>
+  <p style="margin:5px 0 0 0;">Sometimes</p>`;
+
+const alotHtml = `
+  <svg width="60" height="60" viewBox="0 0 60 60">
+    <circle cx="30" cy="30" r="25" fill="black" stroke="black" stroke-width="3"/>
+  </svg>
+  <p style="margin:5px 0 0 0;">A lot</p>`;
+
+const questions = [
+  "Do trees have thoughts",
+  "Do trees have feelings?",
+  "Can trees be grateful?",
+  "Do trees listen?",
+  "Do trees talk to people?",
+  "Do trees move all by themselves?",
+  "Should people protect trees so there are more of them on Earth?",
+  "Are trees more important than people?",
+  "How much do you spend time in nature?",
+  "How much do you read books or watch shows about nature?"
+];
+
+const questionTrials = jsPsych.randomization.shuffle(questions).map(q => ({
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p>${q}</p>`,
+  choices: [neverHtml, sometimesHtml, alotHtml],
+  button_html: function(choice) {
+    return `<button class="jspsych-btn" style="width:100px;height:100px;border:none;background:transparent;padding:0;text-align:center;">${choice}</button>`;
+  },
+  data: { question: q }
+}));
+
+questionTrials.forEach(t => timeline.push(t));
+
+const completion = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <h1>Thank You!</h1>
+  `,
+  choices: ['Finish']
+};
+timeline.push(completion);
 
 jsPsych.run(timeline);
