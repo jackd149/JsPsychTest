@@ -16,14 +16,14 @@ var timeline = [];
 //warmup 1 trial
 // things that change for square left vs right
 const square_left = {
-    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/warmup_intro_trial1_c1.m4v",
-    id_left: "triangle",
-    id_right: "square"
+  stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/warmup_intro_trial1_c1.m4v",
+  id_left: "triangle",
+  id_right: "square"
 };
 const square_right = {
-    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/warmup_intro_trial1_c2.m4v",
-    id_left: "square",
-    id_right: "triangle"
+  stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/warmup_intro_trial1_c2.m4v",
+  id_left: "square",
+  id_right: "triangle"
 };
 
 // randomly select square left vs right
@@ -34,24 +34,24 @@ console.log('left: ', rand_square_selection.id_left);
 
 // use your variable wherever things are randomly selected
 const warmup_trial_intro = {
-    type: jsPsychVideoHotspots,
-    stimulus: rand_square_selection.stimulus,
-    hotspots: [{
-            id: rand_square_selection.id_left,
-            x: 100,
-            y: 150,
-            width: 325,
-            height: 325,
-        },
-        {
-            id: rand_square_selection.id_right,
-            x: 600,
-            y: 150,
-            width: 325,
-            height: 325,
-        }
-    ],
-    hotspot_highlight_css: 'background-color: rgba(255, 0, 0, 0.3); border: 2px solid red;'
+  type: jsPsychVideoHotspots,
+  stimulus: rand_square_selection.stimulus,
+  hotspots: [{
+      id: rand_square_selection.id_left,
+      x: 100,
+      y: 150,
+      width: 325,
+      height: 325,
+    },
+    {
+      id: rand_square_selection.id_right,
+      x: 600,
+      y: 150,
+      width: 325,
+      height: 325,
+    }
+  ],
+  hotspot_highlight_css: 'background-color: rgba(255, 0, 0, 0.3); border: 2px solid red;'
 };
 
 //https://github.com/efosterhanson/CHS_stims/blob/main/ProjectSprouts/warm_up_1_redo.mp4
@@ -74,33 +74,36 @@ const rand_square_redo_selection = jsPsych.randomization.sampleWithoutReplacemen
 
 
 const warmup_trial_intro_redo = {
-    type: jsPsychVideoHotspots,
-    stimulus: rand_square_redo_selection.stimulus,
-    hotspots: [{
-            id: rand_square_redo_selection.id_left,
-            x: 100,
-            y: 150,
-            width: 325,
-            height: 325,
-        },
-        {
-            id: rand_square_redo_selection.id_right,
-            x: 600,
-            y: 150,
-            width: 325,
-            height: 325,
-        }
-    ],
-    hotspot_highlight_css: 'background-color: rgba(255, 0, 0, 0.3); border: 2px solid red;'
+  type: jsPsychVideoHotspots,
+  stimulus: rand_square_redo_selection.stimulus,
+  hotspots: [{
+      id: rand_square_redo_selection.id_left,
+      x: 100,
+      y: 150,
+      width: 325,
+      height: 325,
+    },
+    {
+      id: rand_square_redo_selection.id_right,
+      x: 600,
+      y: 150,
+      width: 325,
+      height: 325,
+    }
+  ],
+  hotspot_highlight_css: 'background-color: rgba(255, 0, 0, 0.3); border: 2px solid red;'
 };
 
 const warmup_trial_intro_conditional = {
-    timeline: [warmup_trial_intro_redo],
-    conditional_function: function() {
-        const last_response = jsPsych.data.get().last(1).values()[0].response;
+  timeline: [warmup_trial_intro_redo],
+  conditional_function: function() {
+    const last_trial = jsPsych.data.get().last(1).values()[0];
 
-        return last_response === "triangle";
-    }
+    console.log("last_trial =", last_trial);
+    console.log("hotspot_clicked =", last_trial.hotspot_clicked);
+
+    return last_trial.hotspot_clicked === "triangle";
+  }
 };
 
 timeline.push(warmup_trial_intro);
@@ -149,28 +152,29 @@ const howOld = {
 timeline.push(howOld);
 
 const sarca_rose_ant_1 = {
-    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c1_ver_f.mp4",
-    id_left: "ant",
-    id_right: "grass"
+  stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c1_ver_f.mp4",
+  id_left: "ant",
+  id_right: "grass"
 };
+
 const sarca_rose_ant_2 = {
-    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c2_ver_f.mp4",
-    id_left: "grass",
-    id_right: "ant"
+  stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c2_ver_f.mp4",
+  id_left: "grass",
+  id_right: "ant"
 };
 
 // randomly select ant to be on left or right
 const rand_sarca_rose_ant_selection = jsPsych.randomization.sampleWithoutReplacement([sarca_rose_ant_1, sarca_rose_ant_2], 1)[0];
 
 const sarca_rose_bee_1 = {
-    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c1.m4v",
-    id_left: "bee",
-    id_right: "grass"
+  stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c1.m4v",
+  id_left: "bee",
+  id_right: "grass"
 };
 const sarca_rose_bee_2 = {
-    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c2.m4v",
-    id_left: "grass",
-    id_right: "bee"
+  stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c2.m4v",
+  id_left: "grass",
+  id_right: "bee"
 };
 
 // randomly select ant to be on left or right
