@@ -98,11 +98,7 @@ const warmup_trial_intro_conditional = {
     conditional_function: function() {
         const last_response = jsPsych.data.get().last(1).values()[0].response;
 
-        if (last_response === "triangle") {
-            return false; // correct, skip repeat
-        } else {
-            return true; // wrong, play it one more time
-        }
+        return last_response === "triangle";
     }
 };
 
