@@ -63,6 +63,7 @@ const square_left_redo = {
     id_left: "triangle",
     id_right: "square"
 };
+
 const square_right_redo = {
     stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/Adobe%20Express%20-%20ProjectSprouts_warm_up_2_redo.mp4",
     id_left: "square",
@@ -105,57 +106,140 @@ const warmup_trial_intro_conditional = {
 timeline.push(warmup_trial_intro);
 timeline.push(warmup_trial_intro_conditional);
 
+const warmup_trial_correct = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <div class="great-job-screen">
+      <div class="fireworks-placeholder">🎆</div>
+    </div>
+
+    <audio id="great-job-audio" src="https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/warmup_trial_correct_audio.mp3"></audio>
+  `,
+  choices: [],
+  trial_duration: null,
+
+  on_load: function() {
+    const audio = document.getElementById("great-job-audio");
+
+    audio.play();
+
+    audio.addEventListener("ended", function() {
+      jsPsych.finishTrial();
+    });
+  }
+};
+timeline.push(warmup_trial_correct);
+
+const eco_reason_trans = {
+  type: jsPsychVideoButtonResponse,
+  stimulus: ["https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/eco_reason_trans_video.mp4"],
+  choices: [],
+  trial_ends_after_video: true,
+};
+timeline.push(eco_reason_trans);
+
 const howOld = {
   type: jsPsychHtmlButtonResponse,
   stimulus: `
-    <h1>How old are you?</h1>
-    <p>Please select your age from the options below:</p>
+    <h1>First, how old are you?</h1>
+    <p>Click on your age!</p>
   `,
   choices: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
 }
 timeline.push(howOld);
 
-const welcome = {
-  type: jsPsychHtmlButtonResponse,
-  stimulus: `
-    <h1>Let's Play a Guessing Game!</h1>
-  `,
-  choices: ['Start']
+const sarca_rose_ant_1 = {
+    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c1_ver_f.mp4",
+    id_left: "ant",
+    id_right: "grass"
 };
-timeline.push(welcome);
+const sarca_rose_ant_2 = {
+    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c2_ver_f.mp4",
+    id_left: "grass",
+    id_right: "ant"
+};
 
+// randomly select ant to be on left or right
+const rand_sarca_rose_ant_selection = jsPsych.randomization.sampleWithoutReplacement([sarca_rose_ant_1, sarca_rose_ant_2], 1)[0];
 
+const sarca_rose_bee_1 = {
+    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c1.m4v",
+    id_left: "bee",
+    id_right: "grass"
+};
+const sarca_rose_bee_2 = {
+    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_sarca_vb_c2.m4v",
+    id_left: "grass",
+    id_right: "bee"
+};
+
+// randomly select ant to be on left or right
+const rand_sarca_rose_bee_selection = jsPsych.randomization.sampleWithoutReplacement([sarca_rose_bee_1, sarca_rose_bee_2], 1)[0];
+
+// randomly select ant or bee
+const rand_sarca_rose_selection = jsPsych.randomization.sampleWithoutReplacement([rand_sarca_rose_ant_selection, rand_sarca_rose_bee_selection], 1)[0];
+
+// Using rose_bee for now, need ant assets still
+// use your variable wherever things are randomly selected
 const sarca = {
-  type: jsPsychHtmlButtonResponse,
-  stimulus: `
-    <p>There's this Stuff called <b>sarca</b>, lots of things have <b>sarca</b> inside.</p>
-    <img src="img/Rose.png" alt="Rose" />
-    <p>Some roses have <b>sarca</b> inside.</p>
-    <p>Which other thing do you think also has <b>sarca</b> inside?</p>
-  `,
-  choices: [beeHtml, grassHtml],
-  button_html: function(choice) {
-    return `<button class="jspsych-btn" style="width:140px;height:140px;border:none;background:transparent;padding:0">${choice}</button>`;
-  }
+    type: jsPsychVideoHotspots,
+    stimulus: rand_sarca_rose_bee_selection.stimulus,
+    hotspots: [{
+            id: rand_sarca_rose_bee_selection.id_left,
+            x: 80,
+            y: 200,
+            width: 325,
+            height: 325,
+        },
+        {
+            id: rand_sarca_rose_bee_selection.id_right,
+            x: 600,
+            y: 200,
+            width: 325,
+            height: 325,
+        }
+    ],
+    hotspot_highlight_css: 'background-color: rgba(255, 0, 0, 0.3); border: 2px solid red;'
 };
 timeline.push(sarca);
 
+// Need to change video to use glorp instead of kaki
+const glorp_squirrel_1 = {
+    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_kaki_vb_c1_video.m4v",
+    id_left: "oak tree",
+    id_right: "kangaroo"
+};
+const glorp_squirrel_2 = {
+    stimulus: "https://raw.githubusercontent.com/efosterhanson/CHS_stims/main/ProjectSprouts/ind_kaki_vb_c2_video.m4v",
+    id_left: "kangaroo",
+    id_right: "oak tree"
+};
+
+const rand_glorp_squirrel_selection = jsPsych.randomization.sampleWithoutReplacement([glorp_squirrel_1, glorp_squirrel_2], 1)[0];
+
 const glorp = {
-  type: jsPsychHtmlButtonResponse,
-  stimulus: `
-    <h1>Glorp</h1>
-    <p>There's a disease called <b>glorp</b>. Lots of things can get <b>glorp</b>.</p>
-    <img src="img/Squirrel.png" alt="Squirrel" />
-    <p>Right now some squirrels have <b>glorp</b>.</p>
-    <p>Which other thing do you think might also have <b>glorp</b>?</p>
-  `,
-  choices: [oakTreeHtml, kangarooHtml],
-  button_html: function(choice) {
-    return `<button class="jspsych-btn" style="width:140px;height:140px;border:none;background:transparent;padding:0">${choice}</button>`;
-  }
+    type: jsPsychVideoHotspots,
+    stimulus: rand_glorp_squirrel_selection.stimulus,
+    hotspots: [{
+            id: rand_glorp_squirrel_selection.id_left,
+            x: 80,
+            y: 200,
+            width: 325,
+            height: 325,
+        },
+        {
+            id: rand_glorp_squirrel_selection.id_right,
+            x: 600,
+            y: 200,
+            width: 325,
+            height: 325,
+        }
+    ],
+    hotspot_highlight_css: 'background-color: rgba(255, 0, 0, 0.3); border: 2px solid red;'
 };
 timeline.push(glorp);
 
+// Still need assets for this
 const feelAboutNature = {
   type: jsPsychHtmlButtonResponse,
   stimulus: `
@@ -168,6 +252,7 @@ const feelAboutNature = {
 };
 timeline.push(feelAboutNature);
 
+// Need intro video/audio and audio for questions
 const treeQuestions = {
   type: jsPsychHtmlButtonResponse,
 
